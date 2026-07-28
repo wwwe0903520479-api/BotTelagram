@@ -2,55 +2,316 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake Shop UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SUDAN STORE - المتجر الرقمي المتكامل</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body {
-            background-color: #0f172a;
-            color: #ffffff;
-            font-family: Tahoma, sans-serif;
-            text-align: center;
-            padding: 20px;
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #1e293b;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --accent-gold: #f59e0b;
+            --text-main: #ffffff;
+            --text-sub: #94a3b8;
+            --danger: #ef4444;
         }
-        .btn-custom {
-            background: linear-gradient(135deg, #10b981, #059669);
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        /* حاوية المتجر المتوافقة مع جميع المقاسات (هاتف، إيباد، كمبيوتر) */
+        .store-container {
+            width: 100%;
+            max-width: 600px; /* مقاس مثالي يمنع التمدد المبالغ فيه على الكمبيوتر والإيباد */
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            max-height: 95vh;
+        }
+
+        /* الهيدر العلوي */
+        header {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #334155;
+        }
+
+        header h1 {
+            font-size: 22px;
+            color: var(--accent-gold);
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 13px;
+            color: var(--text-sub);
+        }
+
+        /* شريط التنقل السريع (حسابي، دعم، إعدادات) */
+        .top-nav {
+            display: flex;
+            justify-content: space-around;
+            background: #0f172a;
+            padding: 10px;
+            font-size: 13px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .top-nav button {
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .top-nav button:hover {
+            color: var(--accent-green);
+        }
+
+        /* محتوى المتجر القابل للتمرير */
+        .content {
+            padding: 15px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .section-title {
+            font-size: 15px;
+            color: var(--accent-blue);
+            margin: 15px 0 10px 0;
+            border-right: 4px solid var(--accent-blue);
+            padding-right: 8px;
+        }
+
+        /* شبكة الأقسام والخدمات */
+        .grid-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* عمودين للهواتف والإيباد والكمبيوتر للحفاظ على التناسق الثابت */
+            gap: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .grid-menu {
+                grid-template-columns: repeat(3, 1fr); /* 3 أعمدة للشاشات الأكبر */
+            }
+        }
+
+        .card-item {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .card-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-green);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .card-item span {
+            font-size: 26px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .card-item h3 {
+            font-size: 13px;
+            color: var(--text-main);
+        }
+
+        /* زر الشيتو المميز */
+        .cheato-card {
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            border: none;
+            grid-column: span 2;
+        }
+
+        /* أزرار الإجراءات السفلية */
+        .footer-actions {
+            padding: 15px;
+            background: #0f172a;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-main {
+            flex: 1;
+            background: linear-gradient(135deg, var(--accent-green), #059669);
             color: white;
             border: none;
-            padding: 15px 25px;
-            margin: 10px 0;
-            width: 100%;
-            border-radius: 12px;
-            font-size: 16px;
+            padding: 12px;
+            border-radius: 10px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            font-size: 14px;
+            transition: 0.2s;
         }
-        .btn-danger-custom {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+
+        .btn-main:hover {
+            opacity: 0.9;
+        }
+
+        .btn-support {
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
 
-    <h2>🎮 Snake Engine Panel</h2>
-    <p>اختر الخدمة المطلوبة بتصميم تفاعلي فائق:</p>
+    <div class="store-container">
+        <!-- هيدر المتجر -->
+        <header>
+            <h1> سودان ستور | SUDAN STORE ⚡</h1>
+            <p>منصتك الاحترافية للعملات الرقمية، الألعاب، والبطاقات الرقمية</p>
+        </header>
 
-    <button class="btn-custom" onclick="sendDataToBot('8ball')">🎱 شحن 8Ball Pool</button>
-    <button class="btn-custom" onclick="sendDataToBot('deposit')">💵 إيداع رصيد USDT</button>
-    <button class="btn-custom btn-danger-custom" onclick="closeApp()">❌ إغلاق الواجهة</button>
+        <!-- شريط علوي للحساب والإعدادات -->
+        <div class="top-nav">
+            <button onclick="showAlert('إنشاء حساب جديد', 'قم بربط حسابك عبر تيليجرام تلقائياً.')">👤 حسابي</button>
+            <button onclick="showAlert('إعدادات المتجر', 'العملة المعتمدة: USDT / SDG')">⚙️ الإعدادات</button>
+            <button onclick="showAlert('سجل المعاملات', 'لا توجد عمليات سابقة حالياً.')">📦 طلباتي</button>
+        </div>
+
+        <!-- الأقسام والخدمات -->
+        <div class="content">
+
+            <!-- قسم العملات الرقمية -->
+            <div class="section-title">💵 العملات الرقمية (USDT)</div>
+            <div class="grid-menu">
+                <div class="card-item" onclick="selectService('شراء وبيع USDT')">
+                    <span>🔄</span>
+                    <h3>شراء / بيع USDT</h3>
+                </div>
+                <div class="card-item" onclick="selectService('شحن منصة باينانس')">
+                    <span>💎</span>
+                    <h3>شحن محفظة USDT</h3>
+                </div>
+            </div>
+
+            <!-- قسم السوشيال ميديا -->
+            <div class="section-title">🌐 خدمات السوشيال ميديا والنتفليكس</div>
+            <div class="grid-menu">
+                <div class="card-item" onclick="selectService('شحن عملات تيك توك')">
+                    <span>🎵</span>
+                    <h3>عملات تيك توك</h3>
+                </div>
+                <div class="card-item" onclick="selectService('نجوم وتلغرام بريميوم')">
+                    <span>⭐</span>
+                    <h3>نجوم وتلغرام</h3>
+                </div>
+                <div class="card-item" onclick="selectService('اشتراك نتفليكس 4K')">
+                    <span>🎬</span>
+                    <h3>نتفليكس Netflix</h3>
+                </div>
+            </div>
+
+            <!-- قسم الألعاب -->
+            <div class="section-title">🎮 شحن الألعاب الشهيرة</div>
+            <div class="grid-menu">
+                <div class="card-item" onclick="selectService('شدات ببجي موبايل')">
+                    <span>🎯</span>
+                    <h3>شدات ببجي PUBG</h3>
+                </div>
+                <div class="card-item" onclick="selectService('جواهر فري فاير')">
+                    <span>🔥</span>
+                    <h3>فري فاير Free Fire</h3>
+                </div>
+                <div class="card-item" onclick="selectService('إرسال كوينز 8Ball Pool')">
+                    <span>🎱</span>
+                    <h3>بلياردو (كوينز)</h3>
+                </div>
+                <div class="card-item" onclick="selectService('كول اوف ديوتي')">
+                    <span>🪖</span>
+                    <h3>كول اوف ديوتي</h3>
+                </div>
+                <div class="card-item" onclick="selectService('كلاش اوف كلانس')">
+                    <span>⚔️</span>
+                    <h3>كلاش اوف كلانس</h3>
+                </div>
+            </div>
+
+            <!-- قسم البطاقات الرقمية -->
+            <div class="section-title">💳 البطاقات الرقمية العالمية</div>
+            <div class="grid-menu">
+                <div class="card-item" onclick="selectService('بطاقات جوجل بلاي')">
+                    <span>🛒</span>
+                    <h3>جوجل بلاي</h3>
+                </div>
+                <div class="card-item" onclick="selectService('رصيد أبل آيتونز')">
+                    <span>🍏</span>
+                    <h3>آبل آيتونز Apple</h3>
+                </div>
+                <div class="card-item" onclick="selectService('بطاقات بلايستيشن 4 و 5')">
+                    <span>🎮</span>
+                    <h3>بلايستيشن PlayStation</h3>
+                </div>
+            </div>
+
+            <!-- قسم هاك الشيتو المميز -->
+            <div class="section-title">⚡ الاشتراكات الخاصة</div>
+            <div class="grid-menu">
+                <div class="card-item cheato-card" onclick="selectService('مفتاح هاك الشيتو بلياردو 🎱')">
+                    <span>🎱🔥</span>
+                    <h3 style="color: #fff;">مفاتيح اشتراك هاك الشيتو (بلياردو)</h3>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- أزرار الإجراءات السفلية -->
+        <div class="footer-actions">
+            <button class="btn-support" onclick="contactSupport()">💬 الدعم الفني</button>
+            <button class="btn-main" onclick="showAlert('تنبيه', 'اختر الخدمة المطلوبة ليتم إرسالها للبوت فوراً')">إرسال الطلب للبوت 🚀</button>
+        </div>
+    </div>
 
     <script>
+        // تفعيل واجهة تيليجرام المدمجة وتثبيت المقاسات
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        function sendDataToBot(item) {
-            tg.sendData(item);
+        function selectService(serviceName) {
+            // إرسال البيانات المحددة مباشرة إلى بوت بايثون وإغلاق الواجهة
+            tg.sendData(serviceName);
         }
 
-        function closeApp() {
-            tg.close();
+        function showAlert(title, message) {
+            alert(title + ": \n" + message);
+        }
+
+        function contactSupport() {
+            // توجيه المستخدم لدعم المتجر
+            window.OpenLink ? window.OpenLink("https://t.me/your_support_username") : alert("للتواصل مع الدعم الفني عبر البوت مباشرة.");
         }
     </script>
 </body>
